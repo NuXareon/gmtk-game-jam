@@ -31,6 +31,10 @@ public class InteractionComponent : MonoBehaviour
         {
             GetComponent<Renderer>().material.color = Color.blue;
         }
+        else if (gameObject.tag == "Player")
+        {
+            GetComponent<Renderer>().material.color = Color.green;
+        }
     }
 
     void OnCollisionEnter(Collision collision)

@@ -14,10 +14,13 @@ public class InteractionManager : MonoBehaviour
     public static int interactionLayer = 6;
 
     List<Couple> currentCouples = new List<Couple>();
+    int playerCount = 0;
 
     // Start is called before the first frame update
     void Start()
     {
+        GameObject[] targets = GameObject.FindGameObjectsWithTag("Player");
+        playerCount = targets.Length;
     }
 
     // Update is called once per frame
@@ -80,6 +83,25 @@ public class InteractionManager : MonoBehaviour
             secondInteractionComp.SetInteractingPartner(first);
 
             currentCouples.Add(new Couple { first = first, second = second });
+
+            if (first.tag == "Player")
+            {
+                --playerCount;
+            }
+            if (second.tag == "Player")
+            {
+                --playerCount;
+            }
+
+            if (playerCount == 0)
+            {
+                Debug.Log("The power of love wins once again!");
+            }
+
+            if (playerCount < 0)
+            {
+                Debug.LogError("Invalid number of players left");
+            }
         }
     }
 }
