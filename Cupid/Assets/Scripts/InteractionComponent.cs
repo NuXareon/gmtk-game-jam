@@ -4,27 +4,59 @@ using UnityEngine;
 
 public class InteractionComponent : MonoBehaviour
 {
+    InteractionManager interactionManager;
+
     Rigidbody rigidBody;
 
     GameObject interactionPartner;
+    public bool inLove
+    {
+        get; set;
+    }
 
     //float interactionSpeed = InteractionManager.defaultInteractionSpeed;
 
     // Start is called before the first frame update
     void Start()
     {
+        interactionManager = GameObject.FindWithTag("GameController").GetComponent<InteractionManager>();
         rigidBody = gameObject.GetComponent<Rigidbody>();
+        inLove = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (inLove)
+        {
+            GetComponent<Renderer>().material.color = Color.blue;
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (inLove)
+        {
+            // Interaction already finished (turn them into obstacles?)
+            return;
+        }
+
+        if (collision.collider.gameObject.layer == InteractionManager.interactionLayer)
+        {
+            interactionManager.MakeCoupleFallInLove(gameObject, collision.collider.gameObject);
+        }
+        else if (false)
+        {
+            // Handle obstacle collisions
+        }
+
+        // finish interaction for the other player?
+        // interactionPartner = null;
     }
 
     void FixedUpdate()
     {
-        if (interactionPartner)
+        if (interactionPartner && !inLove)
         {
             Vector3 direction = interactionPartner.transform.position - gameObject.transform.position;
             rigidBody.MovePosition(gameObject.transform.position + direction.normalized * InteractionManager.defaultInteractionSpeed);
@@ -39,7 +71,7 @@ public class InteractionComponent : MonoBehaviour
             return false;
         }
 
-        if (otherObj.layer != 6)
+        if (otherObj.layer != InteractionManager.interactionLayer)
         {
             // Object not in valid layer (i.e. not a person)
             return false;
@@ -51,5 +83,19 @@ public class InteractionComponent : MonoBehaviour
     public void SetInteractingPartner(GameObject partnerObj)
     {
         interactionPartner = partnerObj;
+    }
+
+    public void ClearAllInteractionPartners()
+    {
+        if (interactionPartner)
+        {
+            InteractionComponent partnerInteraction = interactionPartner.GetComponent<InteractionComponent>();
+            if (partnerInteraction)
+            {
+                partnerInteraction.interactionPartner = null;
+            }
+        }
+
+        interactionPartner = null;
     }
 }
