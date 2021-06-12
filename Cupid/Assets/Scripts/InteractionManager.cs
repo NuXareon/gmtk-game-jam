@@ -11,6 +11,7 @@ public class InteractionManager : MonoBehaviour
         public GameObject second;
     }
 
+    public GameObject heartPrefab;
     public UnityEngine.UI.Text UILinksText;
 
     public static float defaultInteractionSpeed = 0.05f;
@@ -54,19 +55,6 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
-    {
-        foreach (Couple c in currentCouples)
-        {
-            // TODO Render someting cute
-            Vector3 midpoint = (c.first.transform.position + c.second.transform.position) / 2;
-            midpoint.y += 1.0f;
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(midpoint, 0.3f);
-        }
-    }
-
     public void StartInteraction(GameObject first, GameObject second)
     {
         Debug.Log(first.name + " and " + second.name + " are trying to interact!");
@@ -107,6 +95,8 @@ public class InteractionManager : MonoBehaviour
 
             currentCouples.Add(new Couple { first = first, second = second });
 
+            RenderHeart(first.transform.position, second.transform.position);
+
             UpdateCounters(first, second);
         }
     }
@@ -146,5 +136,14 @@ public class InteractionManager : MonoBehaviour
         {
             --playerCount;
         }
+    }
+
+    void RenderHeart(Vector3 posFirst, Vector3 posSecond)
+    {
+        Vector3 midpoint = (posFirst + posSecond) / 2;
+        Vector3 direction = (posSecond - posFirst).normalized;
+
+        midpoint.y += 1.0f;
+        Instantiate(heartPrefab, midpoint, Quaternion.identity);
     }
 }
