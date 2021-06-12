@@ -38,8 +38,22 @@ public class InteractionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (playerCount == 0)
+        {
+            Debug.Log("The power of love wins once again!");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else if (playerCount < 0)
+        {
+            Debug.LogError("Invalid number of players left");
+        }
+        else if (playerCount == 1 && peopleCount == 1)
+        {
+            Debug.Log("And love failed that day");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
+
     void OnDrawGizmos()
     {
         foreach (Couple c in currentCouples)
@@ -72,11 +86,6 @@ public class InteractionManager : MonoBehaviour
             secondInteractionComp.SetInteractingPartner(first);
             ++numLinks;
             UILinksText.text = "Links: " + numLinks.ToString();
-            Debug.DrawLine(first.transform.position, second.transform.position, Color.green, 1.0f);
-        }
-        else
-        {
-            Debug.DrawLine(first.transform.position, second.transform.position, Color.red, 1.0f);
         }
     }
 
@@ -111,6 +120,20 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
+    public void LethalObstacleHit(GameObject obstacle, GameObject person)
+    {
+        StopInteraction(person);
+
+        obstacle.SetActive(false);
+        person.SetActive(false);
+
+        if (person.CompareTag("Player"))
+        {
+            Debug.Log("Target is dead, you failed.");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
     void UpdateCounters(GameObject first, GameObject second)
     {
         peopleCount -= 2;
@@ -122,21 +145,6 @@ public class InteractionManager : MonoBehaviour
         if (second.CompareTag("Player"))
         {
             --playerCount;
-        }
-
-        if (playerCount == 0)
-        {
-            Debug.Log("The power of love wins once again!");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }
-        else if (playerCount < 0)
-        {
-            Debug.LogError("Invalid number of players left");
-        }
-        else if (playerCount == 1 && peopleCount == 1)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            Debug.Log("And love failed that day");
         }
     }
 }

@@ -61,7 +61,7 @@ public class InteractionComponent : MonoBehaviour
             {
                 if (obstacleComponent.isLethal)
                 {
-                    Debug.LogWarning("Lethal obstacles not implemented yet");
+                    interactionManager.LethalObstacleHit(collision.collider.gameObject, gameObject);
                 }
                 else
                 {

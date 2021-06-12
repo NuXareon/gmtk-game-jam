@@ -51,7 +51,7 @@ public class InputController : MonoBehaviour
         }
 
         UpdateLine();
-        DrawDebugLines();
+        //DrawDebugLines();
     }
 
     void FixedUpdate()
@@ -127,12 +127,15 @@ public class InputController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
+                Vector3 directionFirst = (firstObject.transform.position - cam.transform.position).normalized;
+                lineRenderer.SetPosition(0, cam.transform.position + directionFirst);
+
                 Ray cameraMouseRay = cam.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                 if (Physics.Raycast(cameraMouseRay, out hit))
                 {
-                    Vector3 direction = (hit.point - cam.transform.position).normalized;
-                    lineRenderer.SetPosition(1, cam.transform.position + direction);
+                    Vector3 directionSecond = (hit.point - cam.transform.position).normalized;
+                    lineRenderer.SetPosition(1, cam.transform.position + directionSecond);
                 }
             }
         }

@@ -643,14 +643,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 935075566}
     m_Modifications:
-    - target: {fileID: 235218278023808737, guid: b1d03c36c0b5cfe4193c02d6b5bc6017, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 235218278023808737, guid: b1d03c36c0b5cfe4193c02d6b5bc6017, type: 3}
-      propertyPath: m_Color.rgba
-      value: 4286883494
-      objectReference: {fileID: 0}
     - target: {fileID: 3983152170620737082, guid: b1d03c36c0b5cfe4193c02d6b5bc6017, type: 3}
       propertyPath: m_Name
       value: Michelle
