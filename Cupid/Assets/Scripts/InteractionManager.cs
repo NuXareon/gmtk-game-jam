@@ -10,12 +10,15 @@ public class InteractionManager : MonoBehaviour
         public GameObject second;
     }
 
+    public UnityEngine.UI.Text UILinksText;
+
     public static float defaultInteractionSpeed = 0.05f;
     public static int interactionLayer = 6;
 
     List<Couple> currentCouples = new List<Couple>();
     int playerCount = 0;
     int peopleCount = 0;
+    int numLinks = 0;
 
     void Awake()
     {
@@ -28,7 +31,7 @@ public class InteractionManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        UILinksText.text = "Links: " + numLinks.ToString();
     }
 
     // Update is called once per frame
@@ -66,6 +69,8 @@ public class InteractionManager : MonoBehaviour
         {
             firstInteractionComp.SetInteractingPartner(second);
             secondInteractionComp.SetInteractingPartner(first);
+            ++numLinks;
+            UILinksText.text = "Links: " + numLinks.ToString();
             Debug.DrawLine(first.transform.position, second.transform.position, Color.green, 1.0f);
         }
         else
