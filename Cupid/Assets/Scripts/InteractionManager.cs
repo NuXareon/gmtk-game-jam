@@ -115,11 +115,11 @@ public class InteractionManager : MonoBehaviour
     {
         peopleCount -= 2;
 
-        if (first.tag == "Player")
+        if (first.CompareTag("Player"))
         {
             --playerCount;
         }
-        if (second.tag == "Player")
+        if (second.CompareTag("Player"))
         {
             --playerCount;
         }
@@ -135,6 +135,7 @@ public class InteractionManager : MonoBehaviour
         }
         else if (playerCount == 1 && peopleCount == 1)
         {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             Debug.Log("And love failed that day");
         }
     }

@@ -13,11 +13,20 @@ public class InputController : MonoBehaviour
 
     GameObject firstObject;
     GameObject secondObject;
+    LineRenderer lineRenderer;
+
+    void Awake()
+    {
+        lineRenderer = GetComponent<LineRenderer>();
+        cam = Camera.main.GetComponent<Camera>();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        cam = Camera.main.GetComponent<Camera>();
+        lineRenderer.enabled = false;
+        lineRenderer.positionCount = 2;
+        lineRenderer.numCapVertices = 8;
     }
 
     // Update is called once per frame
@@ -41,6 +50,7 @@ public class InputController : MonoBehaviour
             secondObject = null;
         }
 
+        UpdateLine();
         DrawDebugLines();
     }
 
@@ -59,6 +69,8 @@ public class InputController : MonoBehaviour
                 Debug.Log("First object selected: " + hit.collider.name);
 
                 firstObject = hit.collider.gameObject;
+
+                StartDrawLine(firstObject.transform.position);
             }
         }
 
@@ -77,6 +89,8 @@ public class InputController : MonoBehaviour
             {
                 firstObject = null;
             }
+
+            StopDrawLine();
         }
     }
 
@@ -96,5 +110,36 @@ public class InputController : MonoBehaviour
                 Debug.DrawLine(firstObject.transform.position, cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.nearClipPlane)));
             }
         }
+    }
+
+    void StartDrawLine(Vector3 pos)
+    {
+        Vector3 direction = (pos - cam.transform.position).normalized;
+        lineRenderer.SetPosition(0, cam.transform.position + direction);
+        lineRenderer.SetPosition(1, cam.transform.position + direction);
+
+        lineRenderer.enabled = true;
+    }
+
+    void UpdateLine()
+    {
+        if (firstObject)
+        {
+            if (Input.GetMouseButton(0))
+            {
+                Ray cameraMouseRay = cam.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(cameraMouseRay, out hit))
+                {
+                    Vector3 direction = (hit.point - cam.transform.position).normalized;
+                    lineRenderer.SetPosition(1, cam.transform.position + direction);
+                }
+            }
+        }
+    }
+
+    void StopDrawLine()
+    {
+        lineRenderer.enabled = false;
     }
 }

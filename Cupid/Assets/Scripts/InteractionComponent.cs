@@ -36,7 +36,7 @@ public class InteractionComponent : MonoBehaviour
         {
             GetComponent<Renderer>().material.color = Color.blue;
         }
-        else if (gameObject.tag == "Player")
+        else if (gameObject.CompareTag("Player"))
         {
             GetComponent<Renderer>().material.color = Color.green;
         }
