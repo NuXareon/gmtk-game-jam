@@ -8,6 +8,7 @@ public class InteractionComponent : MonoBehaviour
 
     Rigidbody rigidBody;
     Animator animator;
+    SpriteRenderer spriteRenderer;
 
     GameObject interactionPartner;
     public bool inLove
@@ -22,27 +23,20 @@ public class InteractionComponent : MonoBehaviour
         interactionManager = GameObject.FindWithTag("GameController").GetComponent<InteractionManager>();
         rigidBody = gameObject.GetComponent<Rigidbody>();
         animator = gameObject.GetComponentInChildren<Animator>();
+        spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
         inLove = false;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
+        // This doesn't seem to work
+        spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (inLove)
-        {
-            GetComponent<Renderer>().material.color = Color.blue;
-        }
-        else if (gameObject.CompareTag("Player"))
-        {
-            GetComponent<Renderer>().material.color = Color.green;
-        }
-
         UpdateAnimation();
     }
 
