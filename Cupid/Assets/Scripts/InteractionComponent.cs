@@ -7,6 +7,7 @@ public class InteractionComponent : MonoBehaviour
     InteractionManager interactionManager;
 
     Rigidbody rigidBody;
+    Animator animator;
 
     GameObject interactionPartner;
     public bool inLove
@@ -20,6 +21,7 @@ public class InteractionComponent : MonoBehaviour
     {
         interactionManager = GameObject.FindWithTag("GameController").GetComponent<InteractionManager>();
         rigidBody = gameObject.GetComponent<Rigidbody>();
+        animator = gameObject.GetComponentInChildren<Animator>();
         inLove = false;
     }
 
@@ -40,6 +42,8 @@ public class InteractionComponent : MonoBehaviour
         {
             GetComponent<Renderer>().material.color = Color.green;
         }
+
+        UpdateAnimation();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -83,6 +87,43 @@ public class InteractionComponent : MonoBehaviour
         {
             Vector3 direction = interactionPartner.transform.position - gameObject.transform.position;
             rigidBody.MovePosition(gameObject.transform.position + direction.normalized * InteractionManager.defaultInteractionSpeed);
+        }
+    }
+    
+    void UpdateAnimation()
+    {
+        if (inLove)
+        {
+            animator.SetBool("InLove", true);
+            return;
+        }
+
+        if (interactionPartner)
+        {
+            animator.SetBool("Idle", false);
+
+            Vector3 direction = (interactionPartner.transform.position - gameObject.transform.position).normalized;
+            if (Vector3.Dot(direction, Vector3.forward) > 0.707f)
+            {
+                animator.SetInteger("Direction", 0);
+            }
+            else if (Vector3.Dot(direction, Vector3.right) > 0.707f)
+            {
+                animator.SetInteger("Direction", 1);
+            }
+            else if (Vector3.Dot(direction, -Vector3.forward) > 0.707f)
+            {
+                animator.SetInteger("Direction", 2);
+            }
+            else
+            {
+                animator.SetInteger("Direction", 3);
+            }
+
+        }
+        else
+        {
+            animator.SetBool("Idle", true);
         }
     }
 
