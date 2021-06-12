@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene2.unity
     guid: 794790cafb6bd5f4993d8db49116391b
   - enabled: 1
+    path: Assets/Scenes/Deadly.unity
+    guid: 6ab7306d98f4fd942aa7b061b7ad80a3
+  - enabled: 1
     path: Assets/Scenes/Congratulations.unity
     guid: 560bf9ee47647e345878614190107961
   m_configObjects: {}

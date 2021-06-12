@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class InteractionComponent : MonoBehaviour
 {
+    public GameObject playerHighlight;
+
     InteractionManager interactionManager;
 
     Rigidbody rigidBody;
@@ -12,6 +14,7 @@ public class InteractionComponent : MonoBehaviour
     Component halo;
 
     GameObject interactionPartner;
+
     public bool inLove
     {
         get; set;
@@ -34,6 +37,11 @@ public class InteractionComponent : MonoBehaviour
     {
         // This doesn't seem to work
         spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+
+        if (gameObject.CompareTag("Player"))
+        {
+            playerHighlight.SetActive(true);
+        }
     }
 
     // Update is called once per frame
