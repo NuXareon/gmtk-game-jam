@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InteractionManager : MonoBehaviour
 {
@@ -126,6 +127,7 @@ public class InteractionManager : MonoBehaviour
         if (playerCount == 0)
         {
             Debug.Log("The power of love wins once again!");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
         else if (playerCount < 0)
         {
