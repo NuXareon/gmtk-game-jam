@@ -117,6 +117,8 @@ public class InteractionManager : MonoBehaviour
         obstacle.SetActive(false);
         person.SetActive(false);
 
+        --peopleCount;
+
         if (person.CompareTag("Player"))
         {
             Debug.Log("Target is dead, you failed.");
