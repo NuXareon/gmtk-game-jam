@@ -15,12 +15,20 @@ public class InteractionManager : MonoBehaviour
 
     List<Couple> currentCouples = new List<Couple>();
     int playerCount = 0;
+    int peopleCount = 0;
+
+    void Awake()
+    {
+        GameObject[] targets = GameObject.FindGameObjectsWithTag("Player");
+        playerCount = targets.Length;
+        InteractionComponent[] people = GameObject.FindObjectsOfType<InteractionComponent>();
+        peopleCount = people.Length;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        GameObject[] targets = GameObject.FindGameObjectsWithTag("Player");
-        playerCount = targets.Length;
+
     }
 
     // Update is called once per frame
@@ -84,24 +92,7 @@ public class InteractionManager : MonoBehaviour
 
             currentCouples.Add(new Couple { first = first, second = second });
 
-            if (first.tag == "Player")
-            {
-                --playerCount;
-            }
-            if (second.tag == "Player")
-            {
-                --playerCount;
-            }
-
-            if (playerCount == 0)
-            {
-                Debug.Log("The power of love wins once again!");
-            }
-
-            if (playerCount < 0)
-            {
-                Debug.LogError("Invalid number of players left");
-            }
+            UpdateCounters(first, second);
         }
     }
 
@@ -111,6 +102,33 @@ public class InteractionManager : MonoBehaviour
         if (firstInteractionComp)
         {
             firstInteractionComp.ClearAllInteractionPartners();
+        }
+    }
+
+    void UpdateCounters(GameObject first, GameObject second)
+    {
+        peopleCount -= 2;
+
+        if (first.tag == "Player")
+        {
+            --playerCount;
+        }
+        if (second.tag == "Player")
+        {
+            --playerCount;
+        }
+
+        if (playerCount == 0)
+        {
+            Debug.Log("The power of love wins once again!");
+        }
+        else if (playerCount < 0)
+        {
+            Debug.LogError("Invalid number of players left");
+        }
+        else if (playerCount == 1 && peopleCount == 1)
+        {
+            Debug.Log("And love failed that day");
         }
     }
 }
