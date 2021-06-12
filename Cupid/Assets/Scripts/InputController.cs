@@ -83,7 +83,7 @@ public class InputController : MonoBehaviour
     bool CameraMouseRaycast(out RaycastHit hit)
     {
         Ray cameraMouseRay = cam.ScreenPointToRay(Input.mousePosition);
-        int layerMask = 1 << 6;
+        int layerMask = 1 << InteractionManager.interactionLayer;
         return Physics.Raycast(cameraMouseRay, out hit, Mathf.Infinity, layerMask);
     }
 

@@ -104,4 +104,13 @@ public class InteractionManager : MonoBehaviour
             }
         }
     }
+
+    public void StopInteraction(GameObject target)
+    {
+        InteractionComponent firstInteractionComp = target.GetComponent<InteractionComponent>();
+        if (firstInteractionComp)
+        {
+            firstInteractionComp.ClearAllInteractionPartners();
+        }
+    }
 }

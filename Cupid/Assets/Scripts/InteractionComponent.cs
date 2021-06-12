@@ -49,13 +49,27 @@ public class InteractionComponent : MonoBehaviour
         {
             interactionManager.MakeCoupleFallInLove(gameObject, collision.collider.gameObject);
         }
-        else if (false)
+        else
         {
-            // Handle obstacle collisions
-        }
+            ObstacleComponent obstacleComponent = collision.collider.gameObject.GetComponent<ObstacleComponent>();
+            if (obstacleComponent)
+            {
+                if (obstacleComponent.isLethal)
+                {
+                    Debug.LogWarning("Lethal obstacles not implemented yet");
+                }
+                else
+                {
+                    // Correct position so we don't finish inside the object, a bit hacky
+                    ContactPoint contact = collision.GetContact(0);
+                    Vector3 direction = interactionPartner.transform.position - gameObject.transform.position;
+                    Vector3 correctedPos = gameObject.transform.position - direction.normalized * 0.1f;
+                    rigidBody.MovePosition(correctedPos);
 
-        // finish interaction for the other player?
-        // interactionPartner = null;
+                    interactionManager.StopInteraction(gameObject);
+                }
+            }
+        }
     }
 
     void FixedUpdate()
@@ -81,6 +95,15 @@ public class InteractionComponent : MonoBehaviour
             return false;
         }
 
+        Vector3 direction = otherObj.transform.position - gameObject.transform.position;
+        float maxDistance = 1.5f; // TODO adjust this
+        int layerMask = 1 << ObstacleComponent.obstacleLayer;
+        if (Physics.Raycast(gameObject.transform.position, direction.normalized, maxDistance, layerMask))
+        {
+            // If we are too close to an obstacle don't move
+            return false;
+        }
+
         return true;
     }
 
@@ -94,12 +117,15 @@ public class InteractionComponent : MonoBehaviour
         if (interactionPartner)
         {
             InteractionComponent partnerInteraction = interactionPartner.GetComponent<InteractionComponent>();
-            if (partnerInteraction)
+            if (partnerInteraction && !partnerInteraction.inLove)
             {
                 partnerInteraction.interactionPartner = null;
             }
         }
 
-        interactionPartner = null;
+        if (!inLove)
+        {
+            interactionPartner = null;
+        }
     }
 }
