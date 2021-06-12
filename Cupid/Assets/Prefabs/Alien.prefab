@@ -115,6 +115,7 @@ GameObject:
   - component: {fileID: 3983152170620737084}
   - component: {fileID: 3983152170620737085}
   - component: {fileID: 512346329563374165}
+  - component: {fileID: 235218278023808737}
   m_Layer: 6
   m_Name: Alien
   m_TagString: Untagged
@@ -187,3 +188,15 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.1, z: 0}
+--- !u!122 &235218278023808737
+Halo:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3983152170620737082}
+  m_Enabled: 0
+  m_Color:
+    serializedVersion: 2
+    rgba: 4282935143
+  m_Size: 1

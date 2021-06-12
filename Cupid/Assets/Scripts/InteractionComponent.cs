@@ -9,6 +9,7 @@ public class InteractionComponent : MonoBehaviour
     Rigidbody rigidBody;
     Animator animator;
     SpriteRenderer spriteRenderer;
+    Component halo;
 
     GameObject interactionPartner;
     public bool inLove
@@ -24,6 +25,7 @@ public class InteractionComponent : MonoBehaviour
         rigidBody = gameObject.GetComponent<Rigidbody>();
         animator = gameObject.GetComponentInChildren<Animator>();
         spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+        halo = GetComponent("Halo");
         inLove = false;
     }
 
@@ -73,6 +75,19 @@ public class InteractionComponent : MonoBehaviour
                 }
             }
         }
+    }
+
+    void OnMouseEnter()
+    {
+        if (!inLove)
+        {
+            halo.GetType().GetProperty("enabled").SetValue(halo, true, null);
+        }
+    }
+
+    void OnMouseExit()
+    {
+        halo.GetType().GetProperty("enabled").SetValue(halo, false, null);
     }
 
     void FixedUpdate()
