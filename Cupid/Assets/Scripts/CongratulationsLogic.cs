@@ -14,12 +14,6 @@ public class CongratulationsLogic : MonoBehaviour
         StartCoroutine(returnToMainMenu); 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     IEnumerator GoBackToMainMenu()
     {
         yield return new WaitForSeconds(2);

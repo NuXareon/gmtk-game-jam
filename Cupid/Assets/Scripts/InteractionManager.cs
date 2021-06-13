@@ -12,15 +12,18 @@ public class InteractionManager : MonoBehaviour
     }
 
     public GameObject heartPrefab;
-    public UnityEngine.UI.Text UILinksText;
 
     public static float defaultInteractionSpeed = 0.05f;
     public static int interactionLayer = 6;
 
+    public int lives = 5;
+
     List<Couple> currentCouples = new List<Couple>();
     int playerCount = 0;
     int peopleCount = 0;
-    int numLinks = 0;
+    int interactionsOngoing = 0;
+
+    GameUIController UIController;
 
     void Awake()
     {
@@ -28,12 +31,13 @@ public class InteractionManager : MonoBehaviour
         playerCount = targets.Length;
         InteractionComponent[] people = GameObject.FindObjectsOfType<InteractionComponent>();
         peopleCount = people.Length;
+        UIController = GameObject.FindObjectOfType<GameUIController>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        UILinksText.text = "Links: " + numLinks.ToString();
+        UIController.InitialiseHearts(lives);
     }
 
     // Update is called once per frame
@@ -65,6 +69,11 @@ public class InteractionManager : MonoBehaviour
             return;
         }
 
+        if (lives <= 0)
+        {
+            Debug.Log("Out of lives");
+        }
+
         InteractionComponent firstInteractionComp = first.GetComponent<InteractionComponent>();
         InteractionComponent secondInteractionComp = second.GetComponent<InteractionComponent>();
         if (firstInteractionComp && firstInteractionComp.CanInteractWith(second) &&
@@ -72,8 +81,10 @@ public class InteractionManager : MonoBehaviour
         {
             firstInteractionComp.SetInteractingPartner(second);
             secondInteractionComp.SetInteractingPartner(first);
-            ++numLinks;
-            UILinksText.text = "Links: " + numLinks.ToString();
+
+            ++interactionsOngoing;
+            --lives;
+            UIController.BreakHeart();
         }
     }
 
@@ -98,6 +109,8 @@ public class InteractionManager : MonoBehaviour
             RenderHeart(first.transform.position, second.transform.position);
 
             UpdateCounters(first, second);
+
+            OnInteractionCompleted();
         }
     }
 
@@ -108,6 +121,8 @@ public class InteractionManager : MonoBehaviour
         {
             firstInteractionComp.ClearAllInteractionPartners();
         }
+
+        OnInteractionCompleted();
     }
 
     public void LethalObstacleHit(GameObject obstacle, GameObject person)
@@ -124,6 +139,8 @@ public class InteractionManager : MonoBehaviour
             Debug.Log("Target is dead, you failed.");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+
+        OnInteractionCompleted();
     }
 
     void UpdateCounters(GameObject first, GameObject second)
@@ -147,5 +164,15 @@ public class InteractionManager : MonoBehaviour
 
         midpoint.y += 1.0f;
         Instantiate(heartPrefab, midpoint, Quaternion.identity);
+    }
+
+    void OnInteractionCompleted()
+    {
+        --interactionsOngoing;
+        if (interactionsOngoing == 0 && lives == 0 && playerCount > 0)
+        {
+            Debug.Log("Runned out of ammo.");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 }

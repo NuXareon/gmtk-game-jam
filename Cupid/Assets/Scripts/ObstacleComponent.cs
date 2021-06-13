@@ -19,10 +19,4 @@ public class ObstacleComponent : MonoBehaviour
             GetComponent<Renderer>().material.color = Color.cyan;
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
