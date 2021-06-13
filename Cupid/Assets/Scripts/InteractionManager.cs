@@ -154,12 +154,6 @@ public class InteractionManager : MonoBehaviour
 
         --peopleCount;
 
-        if (person.CompareTag("Player"))
-        {
-            Debug.Log("Target is dead, you failed.");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-
         OnInteractionCompleted();
     }
 
@@ -202,5 +196,11 @@ public class InteractionManager : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         obj.SetActive(false);
+
+        if (obj.CompareTag("Player"))
+        {
+            Debug.Log("Target is dead, you failed.");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 }
