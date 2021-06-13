@@ -129,16 +129,30 @@ public class InteractionManager : MonoBehaviour
     {
         StopInteraction(person);
 
-        obstacle.SetActive(false);
-        person.SetActive(false);
+        InteractionComponent interactionComp = person.GetComponent<InteractionComponent>();
+        if (interactionComp)
+        {
+            interactionComp.isDead = true;
+            IEnumerator coroutine = DeactivateGameObjectDelayed(person, 0.5f);
+            StartCoroutine(coroutine);
+        }
+
+        ObstacleComponent obstacleComponent = obstacle.GetComponent<ObstacleComponent>();
+        if (obstacleComponent)
+        {
+            obstacleComponent.isTriggered = true;
+            IEnumerator coroutine = DeactivateGameObjectDelayed(obstacle, 0.333f);
+            StartCoroutine(coroutine);
+        }
+
+        if (!interactionComp || !obstacleComponent)
+        {
+            Debug.LogWarning("Invalid call to lethal obstacle hit!");
+            obstacle.SetActive(false);
+            person.SetActive(false);
+        }
 
         --peopleCount;
-
-        if (person.CompareTag("Player"))
-        {
-            Debug.Log("Target is dead, you failed.");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
 
         OnInteractionCompleted();
     }
@@ -162,7 +176,9 @@ public class InteractionManager : MonoBehaviour
         Vector3 midpoint = (posFirst + posSecond) / 2;
         Vector3 direction = (posSecond - posFirst).normalized;
 
-        midpoint.y += 1.0f;
+        Camera cam = Camera.main.GetComponent<Camera>();
+        midpoint += cam.transform.up;
+
         Instantiate(heartPrefab, midpoint, Quaternion.identity);
     }
 
@@ -172,6 +188,18 @@ public class InteractionManager : MonoBehaviour
         if (interactionsOngoing == 0 && lives == 0 && playerCount > 0)
         {
             Debug.Log("Runned out of ammo.");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
+    IEnumerator DeactivateGameObjectDelayed(GameObject obj, float time)
+    {
+        yield return new WaitForSeconds(time);
+        obj.SetActive(false);
+
+        if (obj.CompareTag("Player"))
+        {
+            Debug.Log("Target is dead, you failed.");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }

@@ -15,6 +15,9 @@ public class InteractionComponent : MonoBehaviour
 
     GameObject interactionPartner;
 
+    public bool isDead
+    { get; set; }
+
     public bool inLove
     {
         get; set;
@@ -30,6 +33,7 @@ public class InteractionComponent : MonoBehaviour
         spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
         halo = GetComponent("Halo");
         inLove = false;
+        isDead = false;
     }
 
     // Start is called before the first frame update
@@ -52,7 +56,7 @@ public class InteractionComponent : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (inLove)
+        if (inLove || isDead)
         {
             // Interaction already finished (turn them into obstacles?)
             return;
@@ -87,7 +91,7 @@ public class InteractionComponent : MonoBehaviour
 
     void OnMouseEnter()
     {
-        if (!inLove)
+        if (!inLove && !isDead)
         {
             halo.GetType().GetProperty("enabled").SetValue(halo, true, null);
         }
@@ -100,7 +104,7 @@ public class InteractionComponent : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (interactionPartner && !inLove)
+        if (interactionPartner && !inLove && !isDead)
         {
             Vector3 direction = interactionPartner.transform.position - gameObject.transform.position;
             rigidBody.MovePosition(gameObject.transform.position + direction.normalized * InteractionManager.defaultInteractionSpeed);
@@ -113,6 +117,11 @@ public class InteractionComponent : MonoBehaviour
         {
             animator.SetBool("InLove", true);
             return;
+        }
+
+        if (isDead)
+        {
+            animator.SetBool("Dead", true);
         }
 
         if (interactionPartner)

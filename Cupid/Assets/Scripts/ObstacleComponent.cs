@@ -4,19 +4,24 @@ using UnityEngine;
 
 public class ObstacleComponent : MonoBehaviour
 {
+    Animator animator;
+
     public static int obstacleLayer = 7;
 
     public bool isLethal = false;
-    // Start is called before the first frame update
-    void Start()
+
+    public bool isTriggered { get; set; }
+
+    void Awake()
     {
-        if (isLethal)
+        animator = gameObject.GetComponentInChildren<Animator>();
+    }
+
+    void Update()
+    {
+        if (isTriggered)
         {
-            GetComponent<Renderer>().material.color = Color.red;
-        }
-        else
-        {
-            GetComponent<Renderer>().material.color = Color.cyan;
+            animator.SetBool("Triggered", true);
         }
     }
 }

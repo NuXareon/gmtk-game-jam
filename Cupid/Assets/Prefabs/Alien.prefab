@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 3983152170620737085}
   - component: {fileID: 512346329563374165}
   - component: {fileID: 235218278023808737}
+  - component: {fileID: 6014432974216758365}
   m_Layer: 6
   m_Name: Alien
   m_TagString: Untagged
@@ -294,7 +295,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.15
   m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.1, z: 0}
@@ -310,3 +311,17 @@ Halo:
     serializedVersion: 2
     rgba: 4282935143
   m_Size: 1
+--- !u!136 &6014432974216758365
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3983152170620737082}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
