@@ -182,7 +182,9 @@ public class InteractionManager : MonoBehaviour
         Vector3 midpoint = (posFirst + posSecond) / 2;
         Vector3 direction = (posSecond - posFirst).normalized;
 
-        midpoint.y += 1.0f;
+        Camera cam = Camera.main.GetComponent<Camera>();
+        midpoint += cam.transform.up;
+
         Instantiate(heartPrefab, midpoint, Quaternion.identity);
     }
 
