@@ -6,22 +6,23 @@ public class ObstacleComponent : MonoBehaviour
 {
     Animator animator;
 
+    public AudioSource triggerAudio;
+
     public static int obstacleLayer = 7;
 
     public bool isLethal = false;
-
-    public bool isTriggered { get; set; }
 
     void Awake()
     {
         animator = gameObject.GetComponentInChildren<Animator>();
     }
 
-    void Update()
+    public void TriggerObstacle()
     {
-        if (isTriggered)
+        if (isLethal)
         {
             animator.SetBool("Triggered", true);
+            triggerAudio.Play();
         }
     }
 }
