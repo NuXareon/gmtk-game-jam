@@ -10,7 +10,14 @@ public class ObstacleComponent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Renderer>().material.color = Color.cyan;
+        if (isLethal)
+        {
+            GetComponent<Renderer>().material.color = Color.red;
+        }
+        else
+        {
+            GetComponent<Renderer>().material.color = Color.cyan;
+        }
     }
 
     // Update is called once per frame

@@ -58,6 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c297d1b39648b549abc587ff2168d6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  heartPrefab: {fileID: 817719644063858288, guid: c7ba81edda5f9b94b832dac3655e3469, type: 3}
   UILinksText: {fileID: 0}
 --- !u!120 &8697741457528562793
 LineRenderer:

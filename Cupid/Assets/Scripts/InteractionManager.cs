@@ -11,6 +11,7 @@ public class InteractionManager : MonoBehaviour
         public GameObject second;
     }
 
+    public GameObject heartPrefab;
     public UnityEngine.UI.Text UILinksText;
 
     public static float defaultInteractionSpeed = 0.05f;
@@ -38,18 +39,19 @@ public class InteractionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-    }
-    void OnDrawGizmos()
-    {
-        foreach (Couple c in currentCouples)
+        if (playerCount == 0)
         {
-            // TODO Render someting cute
-            Vector3 midpoint = (c.first.transform.position + c.second.transform.position) / 2;
-            midpoint.y += 1.0f;
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(midpoint, 0.3f);
+            Debug.Log("The power of love wins once again!");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else if (playerCount < 0)
+        {
+            Debug.LogError("Invalid number of players left");
+        }
+        else if (playerCount == 1 && peopleCount == 1)
+        {
+            Debug.Log("And love failed that day");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
@@ -72,11 +74,6 @@ public class InteractionManager : MonoBehaviour
             secondInteractionComp.SetInteractingPartner(first);
             ++numLinks;
             UILinksText.text = "Links: " + numLinks.ToString();
-            Debug.DrawLine(first.transform.position, second.transform.position, Color.green, 1.0f);
-        }
-        else
-        {
-            Debug.DrawLine(first.transform.position, second.transform.position, Color.red, 1.0f);
         }
     }
 
@@ -98,6 +95,8 @@ public class InteractionManager : MonoBehaviour
 
             currentCouples.Add(new Couple { first = first, second = second });
 
+            RenderHeart(first.transform.position, second.transform.position);
+
             UpdateCounters(first, second);
         }
     }
@@ -108,6 +107,22 @@ public class InteractionManager : MonoBehaviour
         if (firstInteractionComp)
         {
             firstInteractionComp.ClearAllInteractionPartners();
+        }
+    }
+
+    public void LethalObstacleHit(GameObject obstacle, GameObject person)
+    {
+        StopInteraction(person);
+
+        obstacle.SetActive(false);
+        person.SetActive(false);
+
+        --peopleCount;
+
+        if (person.CompareTag("Player"))
+        {
+            Debug.Log("Target is dead, you failed.");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
@@ -123,20 +138,14 @@ public class InteractionManager : MonoBehaviour
         {
             --playerCount;
         }
+    }
 
-        if (playerCount == 0)
-        {
-            Debug.Log("The power of love wins once again!");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }
-        else if (playerCount < 0)
-        {
-            Debug.LogError("Invalid number of players left");
-        }
-        else if (playerCount == 1 && peopleCount == 1)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            Debug.Log("And love failed that day");
-        }
+    void RenderHeart(Vector3 posFirst, Vector3 posSecond)
+    {
+        Vector3 midpoint = (posFirst + posSecond) / 2;
+        Vector3 direction = (posSecond - posFirst).normalized;
+
+        midpoint.y += 1.0f;
+        Instantiate(heartPrefab, midpoint, Quaternion.identity);
     }
 }
