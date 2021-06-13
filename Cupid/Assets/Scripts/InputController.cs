@@ -51,7 +51,6 @@ public class InputController : MonoBehaviour
         }
 
         UpdateLine();
-        //DrawDebugLines();
     }
 
     void FixedUpdate()
@@ -99,17 +98,6 @@ public class InputController : MonoBehaviour
         Ray cameraMouseRay = cam.ScreenPointToRay(Input.mousePosition);
         int layerMask = 1 << InteractionManager.interactionLayer;
         return Physics.Raycast(cameraMouseRay, out hit, Mathf.Infinity, layerMask);
-    }
-
-    void DrawDebugLines()
-    {
-        if (firstObject)
-        {
-            if (Input.GetMouseButton(0))
-            {
-                Debug.DrawLine(firstObject.transform.position, cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.nearClipPlane)));
-            }
-        }
     }
 
     void StartDrawLine(Vector3 pos)

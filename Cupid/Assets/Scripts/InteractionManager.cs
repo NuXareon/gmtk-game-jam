@@ -129,8 +129,28 @@ public class InteractionManager : MonoBehaviour
     {
         StopInteraction(person);
 
-        obstacle.SetActive(false);
-        person.SetActive(false);
+        InteractionComponent interactionComp = person.GetComponent<InteractionComponent>();
+        if (interactionComp)
+        {
+            interactionComp.isDead = true;
+            IEnumerator coroutine = DeactivateGameObjectDelayed(person, 0.5f);
+            StartCoroutine(coroutine);
+        }
+
+        ObstacleComponent obstacleComponent = obstacle.GetComponent<ObstacleComponent>();
+        if (obstacleComponent)
+        {
+            obstacleComponent.isTriggered = true;
+            IEnumerator coroutine = DeactivateGameObjectDelayed(obstacle, 0.333f);
+            StartCoroutine(coroutine);
+        }
+
+        if (!interactionComp || !obstacleComponent)
+        {
+            Debug.LogWarning("Invalid call to lethal obstacle hit!");
+            obstacle.SetActive(false);
+            person.SetActive(false);
+        }
 
         --peopleCount;
 
@@ -174,5 +194,11 @@ public class InteractionManager : MonoBehaviour
             Debug.Log("Runned out of ammo.");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+    }
+
+    IEnumerator DeactivateGameObjectDelayed(GameObject obj, float time)
+    {
+        yield return new WaitForSeconds(time);
+        obj.SetActive(false);
     }
 }
