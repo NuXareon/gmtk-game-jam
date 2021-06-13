@@ -12,6 +12,7 @@ public class InteractionManager : MonoBehaviour
     }
 
     public GameObject heartPrefab;
+    public AudioSource kissAudio;
 
     public static float defaultInteractionSpeed = 0.05f;
     public static int interactionLayer = 6;
@@ -98,17 +99,19 @@ public class InteractionManager : MonoBehaviour
             firstInteractionComp.ClearAllInteractionPartners();
             secondInteractionComp.ClearAllInteractionPartners();
 
-            firstInteractionComp.inLove = true;
             firstInteractionComp.SetInteractingPartner(second);
+            firstInteractionComp.SetInLove();
 
-            secondInteractionComp.inLove = true;
             secondInteractionComp.SetInteractingPartner(first);
+            secondInteractionComp.SetInLove();
 
             currentCouples.Add(new Couple { first = first, second = second });
 
             RenderHeart(first.transform.position, second.transform.position);
 
             UpdateCounters(first, second);
+
+            kissAudio.Play();
 
             OnInteractionCompleted();
         }
@@ -127,12 +130,11 @@ public class InteractionManager : MonoBehaviour
 
     public void LethalObstacleHit(GameObject obstacle, GameObject person)
     {
-        StopInteraction(person);
-
         InteractionComponent interactionComp = person.GetComponent<InteractionComponent>();
         if (interactionComp)
         {
-            interactionComp.isDead = true;
+            interactionComp.ClearAllInteractionPartners();
+            interactionComp.SetIsDead();
             IEnumerator coroutine = DeactivateGameObjectDelayed(person, 0.5f);
             StartCoroutine(coroutine);
         }
@@ -140,7 +142,7 @@ public class InteractionManager : MonoBehaviour
         ObstacleComponent obstacleComponent = obstacle.GetComponent<ObstacleComponent>();
         if (obstacleComponent)
         {
-            obstacleComponent.isTriggered = true;
+            obstacleComponent.TriggerObstacle();
             IEnumerator coroutine = DeactivateGameObjectDelayed(obstacle, 0.333f);
             StartCoroutine(coroutine);
         }

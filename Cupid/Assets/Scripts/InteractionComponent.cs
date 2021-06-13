@@ -15,15 +15,11 @@ public class InteractionComponent : MonoBehaviour
 
     GameObject interactionPartner;
 
-    public bool isDead
-    { get; set; }
+    public AudioSource screamAudio;
+    public AudioSource footstepAudio;
 
-    public bool inLove
-    {
-        get; set;
-    }
-
-    //float interactionSpeed = InteractionManager.defaultInteractionSpeed;
+    public bool isDead = false;
+    public bool inLove = false;
 
     void Awake()
     {
@@ -33,7 +29,6 @@ public class InteractionComponent : MonoBehaviour
         spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
         halo = GetComponent("Halo");
         inLove = false;
-        isDead = false;
     }
 
     // Start is called before the first frame update
@@ -122,6 +117,7 @@ public class InteractionComponent : MonoBehaviour
         if (isDead)
         {
             animator.SetBool("Dead", true);
+            //return;
         }
 
         if (interactionPartner)
@@ -182,6 +178,7 @@ public class InteractionComponent : MonoBehaviour
     public void SetInteractingPartner(GameObject partnerObj)
     {
         interactionPartner = partnerObj;
+        footstepAudio.Play();
     }
 
     public void ClearAllInteractionPartners()
@@ -192,6 +189,7 @@ public class InteractionComponent : MonoBehaviour
             if (partnerInteraction && !partnerInteraction.inLove)
             {
                 partnerInteraction.interactionPartner = null;
+                partnerInteraction.footstepAudio.Stop();
             }
         }
 
@@ -199,5 +197,20 @@ public class InteractionComponent : MonoBehaviour
         {
             interactionPartner = null;
         }
+
+        footstepAudio.Stop();
+    }
+
+    public void SetIsDead()
+    {
+        isDead = true;
+        screamAudio.Play();
+        footstepAudio.Stop();
+    }
+
+    public void SetInLove()
+    {
+        inLove = true;
+        footstepAudio.Stop();
     }
 }
