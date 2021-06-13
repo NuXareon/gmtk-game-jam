@@ -8,8 +8,21 @@ public class MainMenuLogic : MonoBehaviour
     public GameObject main;
     public GameObject intro;
 
+    MusicManager musicManager;
+
+    void Awake()
+    {
+        musicManager = GameObject.FindGameObjectWithTag("Music").GetComponent<MusicManager>();
+    }
+
+    void Start()
+    {
+        musicManager.StopMusic();
+    }
+
     public void StartNewGame()
     {
+        musicManager.StartMusic();
         SceneManager.LoadScene(1);
     }
 
